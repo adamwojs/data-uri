@@ -35,7 +35,7 @@ use PHPUnit\Framework\TestCase;
 class DataTest extends TestCase
 {
 
-    public function testTooLongException()
+    public function testTooLongException(): void
     {
         $i = 0;
         $string = '';
@@ -61,14 +61,14 @@ class DataTest extends TestCase
         }
     }
 
-    public function testGetData()
+    public function testGetData(): void
     {
         $dataString = 'Lorem ipsum dolor sit amet';
         $dataURI = new Data($dataString);
         $this->assertEquals($dataString, $dataURI->getData());
     }
 
-    public function testGetMimeType()
+    public function testGetMimeType(): void
     {
         $dataString = 'Lorem ipsum dolor sit amet';
         $mimeType = 'text/plain';
@@ -76,7 +76,7 @@ class DataTest extends TestCase
         $this->assertEquals($mimeType, $dataURI->getMimeType());
     }
 
-    public function testGetParameters()
+    public function testGetParameters(): void
     {
         $dataString = 'Lorem ipsum dolor sit amet';
         $mimeType = 'text/plain';
@@ -86,7 +86,7 @@ class DataTest extends TestCase
         $this->assertIsArray($dataURI->getParameters());
     }
 
-    public function testIsBinaryData()
+    public function testIsBinaryData(): void
     {
         $dataString = 'Lorem ipsum dolor sit amet';
         $dataURI = new Data($dataString);
@@ -94,7 +94,7 @@ class DataTest extends TestCase
         $this->assertTrue($dataURI->isBinaryData());
     }
 
-    public function testInit()
+    public function testInit(): void
     {
         $dataString = 'Lorem ipsum dolor sit amet';
         $dataURI = new Data($dataString);
@@ -104,19 +104,19 @@ class DataTest extends TestCase
         $this->assertEquals('text/plain', $dataURI->getMimeType());
     }
 
-    public function testAddParameters()
+    public function testAddParameters(): void
     {
         $dataString = 'Lorem ipsum dolor sit amet';
         $dataURI = new Data($dataString);
         $current = count($dataURI->getParameters());
         $dataURI->addParameters('charset', 'iso-8859-7');
-        $this->assertEquals($current, count($dataURI->getParameters()));
+        $this->assertCount($current, $dataURI->getParameters());
         $dataURI->addParameters('another-charset', 'iso-8859-7');
         $this->assertGreaterThan($current, count($dataURI->getParameters()));
         $this->assertArrayHasKey('another-charset', $dataURI->getParameters());
     }
 
-    public function testBuildFromFile()
+    public function testBuildFromFile(): void
     {
         $file = __DIR__ . '/smile.png';
         $dataURI = Data::buildFromFile($file);
@@ -125,14 +125,14 @@ class DataTest extends TestCase
         $this->assertEquals(file_get_contents($file), $dataURI->getData());
     }
 
-    public function testBuildFromUrlShouldThrowFileNotFoundException()
+    public function testBuildFromUrlShouldThrowFileNotFoundException(): void
     {
         $this->expectException(FileNotFoundException::class);
         $url = 'https://placehold.co/x150.png';
         Data::buildFromUrl($url);
     }
 
-    public function testBuildFromUrl()
+    public function testBuildFromUrl(): void
     {
         $url = 'https://placehold.co/350x150.png';
         $dataURI = Data::buildFromUrl($url);
@@ -141,7 +141,7 @@ class DataTest extends TestCase
         $this->assertEquals(file_get_contents($url), $dataURI->getData());
     }
 
-    public function testFileNotFound()
+    public function testFileNotFound(): void
     {
         $this->expectException(FileNotFoundException::class);
         $filename = __DIR__ . '/unknown-file';
@@ -151,7 +151,7 @@ class DataTest extends TestCase
         $dataURI->write($filename);
     }
 
-    public function testFileNotFoundFromFile()
+    public function testFileNotFoundFromFile(): void
     {
         $this->expectException(FileNotFoundException::class);
 
@@ -160,7 +160,7 @@ class DataTest extends TestCase
         Data::buildFromFile($filename);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $filename = __DIR__ . '/test';
         $this->createEmptyFile($filename);
@@ -171,7 +171,7 @@ class DataTest extends TestCase
         unlink($filename);
     }
 
-    private function createEmptyFile($filename)
+    private function createEmptyFile(string $filename): void
     {
         if (file_exists($filename)) {
             unlink($filename);

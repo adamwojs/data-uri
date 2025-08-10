@@ -34,7 +34,7 @@ use PHPUnit\Framework\TestCase;
 class ParserTest extends TestCase
 {
 
-    public function testParse()
+    public function testParse(): void
     {
         $b64 = $this->binaryToBase64(__DIR__ . '/smile.png');
 
@@ -52,19 +52,19 @@ class ParserTest extends TestCase
         $this->assertEquals('image/png', $dataURI->getMimeType());
         $this->assertTrue($dataURI->isBinaryData());
         $this->assertIsString($dataURI->getData());
-        $this->assertEquals(0, count($dataURI->getParameters()));
+        $this->assertCount(0, $dataURI->getParameters());
 
         $dataURI = Parser::parse($tests[1]);
         $this->assertEquals('image/png', $dataURI->getMimeType());
         $this->assertTrue($dataURI->isBinaryData());
         $this->assertIsString($dataURI->getData());
-        $this->assertEquals(1, count($dataURI->getParameters()));
+        $this->assertCount(1, $dataURI->getParameters());
 
         $dataURI = Parser::parse($tests[2]);
         $this->assertEquals('text/plain', $dataURI->getMimeType());
         $this->assertFalse($dataURI->isBinaryData());
         $this->assertEquals('#$%', $dataURI->getData());
-        $this->assertEquals(1, count($dataURI->getParameters()));
+        $this->assertCount(1, $dataURI->getParameters());
 
         $dataURI = Parser::parse($tests[4]);
         $this->assertEquals('image/svg+xml', $dataURI->getMimeType());
@@ -77,21 +77,21 @@ class ParserTest extends TestCase
         $this->assertEquals('text/plain', $dataURI->getMimeType());
     }
 
-    public function testInvalidDataException()
+    public function testInvalidDataException(): void
     {
         $this->expectException(InvalidDataException::class);
         $invalidData = 'data:image/gif;base64,';
         Parser::parse($invalidData);
     }
 
-    public function testInvalidArgumentException()
+    public function testInvalidArgumentException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $invalidData = 'lorem:image:test,datas';
         Parser::parse($invalidData);
     }
 
-    private function binaryToBase64($file)
+    private function binaryToBase64(string $file): string
     {
         return base64_encode(file_get_contents($file));
     }

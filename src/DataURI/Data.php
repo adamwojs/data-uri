@@ -43,74 +43,70 @@ class Data
      * The LITLEN (1024) limits the number of characters which can appear in
      * a single attribute value literal
      */
-    const LITLEN = 0;
+    public const int LITLEN = 0;
 
     /**
      * The ATTSPLEN (2100) limits the sum of all
      * lengths of all attribute value specifications which appear in a tag
      */
-    const ATTSPLEN = 1;
+    public const int ATTSPLEN = 1;
 
     /**
      * The TAGLEN (2100) limits the overall length of a tag
      */
-    const TAGLEN = 2;
+    public const int TAGLEN = 2;
 
     /**
      * ATTS_TAG_LIMIT is the length limit allowed for TAGLEN & ATTSPLEN DataURi
      */
-    const ATTS_TAG_LIMIT = 2100;
+    public const int ATTS_TAG_LIMIT = 2100;
 
     /**
      * LIT_LIMIT is the length limit allowed for LITLEN DataURi
      */
-    const LIT_LIMIT = 1024;
+    public const int LIT_LIMIT = 1024;
 
     /**
      * Base64 encode prefix
      */
-    const BASE_64 = 'base64';
+    public const string BASE_64 = 'base64';
 
     /**
      * File data
-     * @var string
      */
-    protected $data;
+    protected string $data;
 
     /**
      * File mime type
-     * @var string
      */
-    protected $mimeType;
+    protected ?string $mimeType;
 
     /**
      * Parameters provided in DataURI
-     * @var Array
      */
-    protected $parameters;
+    protected array $parameters = [];
 
     /**
      * Tell whether data is binary datas
-     * @var boolean
      */
-    protected $isBinaryData = false;
+    protected bool $isBinaryData = false;
 
     /**
      * A DataURI Object which by default has a 'text/plain'
      * media type and a 'charset=US-ASCII' as optional parameter
      *
-     * @param string    $data       Data to include as "immediate" data
-     * @param string    $mimeType   Mime type of media
-     * @param array     $parameters Array of optional parameters
-     * @param boolean   $strict     Check length of data
-     * @param int       $lengthMode Define Length of data
+     * @param string $data Data to include as "immediate" data
+     * @param string|null $mimeType Mime type of media
+     * @param array $parameters Array of optional parameters
+     * @param bool $strict Check length of data
+     * @param int $lengthMode Define Length of data
      */
     public function __construct(
-        $data,
-        $mimeType = null,
-        array $parameters = array(),
-        $strict = false,
-        $lengthMode = self::TAGLEN
+        string $data,
+        ?string $mimeType = null,
+        array $parameters = [],
+        bool $strict = false,
+        int $lengthMode = self::TAGLEN
     ) {
         $this->data = $data;
         $this->mimeType = $mimeType;
@@ -118,66 +114,57 @@ class Data
 
         $this->init($lengthMode, $strict);
 
-        $this->isBinaryData = strpos($this->mimeType, 'text/') !== 0;
+        $this->isBinaryData = !str_starts_with($this->mimeType, 'text/');
     }
 
     /**
      * File contents
-     * @return string
      */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
 
     /**
      * Media type
-     * @return string
      */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
 
     /**
      * File parameters
-     * @return mixed[]
+     *
+     * @return array<string, mixed>
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
     /**
      * Data is binary data
-     * @return boolean
      */
-    public function isBinaryData()
+    public function isBinaryData(): bool
     {
         return $this->isBinaryData;
     }
 
     /**
      * Set if Data is binary data
-     *
-     * @param boolean $boolean
-     * @return $this
      */
-    public function setBinaryData($boolean)
+    public function setBinaryData(bool $bool): static
     {
-        $this->isBinaryData = (boolean) $boolean;
+        $this->isBinaryData = $bool;
 
         return $this;
     }
 
     /**
      * Add a custom parameters to the DataURi
-     *
-     * @param string $paramName
-     * @param string $paramValue
-     * @return $this
      */
-    public function addParameters($paramName, $paramValue)
+    public function addParameters(string $paramName, string $paramValue): static
     {
         $this->parameters[$paramName] = $paramValue;
 
@@ -187,16 +174,14 @@ class Data
     /**
      * Write datas to the specified file
      *
-     * @param string    $filePath   File to be written
-     * @param Boolean   $overwrite   Override existing file
-     *
-     * @return \Symfony\Component\HttpFoundation\File\File
+     * @param string $filePath File to be written
+     * @param bool $overwrite Override existing file
      *
      * @throws FileNotFoundException
      */
-    public function write($filePath, $overwrite = false)
+    public function write(string $filePath, bool $overwrite = false): File
     {
-        if ( ! file_exists($filePath)) {
+        if (!file_exists($filePath)) {
             throw new FileNotFoundException(sprintf('%s file does not exist', $filePath));
         }
 
@@ -208,41 +193,39 @@ class Data
     /**
      * Get a new instance of DataUri\Data from a file
      *
-     * @param string $file Path to the located file
-     * @param boolean $strict Use strict mode
+     * @param File|string $file Path to the located file
+     * @param bool $strict Use strict mode
      * @param int $lengthMode The length mode
-     * @return Data
+     *
      * @throws FileNotFoundException
      */
-    public static function buildFromFile($file, $strict = false, $lengthMode = Data::TAGLEN)
+    public static function buildFromFile(File|string $file, bool $strict = false, int $lengthMode = Data::TAGLEN): static
     {
-        if ( ! $file instanceof File) {
+        if (!$file instanceof File) {
             try {
                 $file = new File($file);
-            } catch (SymfonyFileException $e){
+            } catch (SymfonyFileException $e) {
                 throw new FileNotFoundException(sprintf('%s file does not exist', $file));
             }
         }
 
         $data = file_get_contents($file->getPathname());
 
-        $dataURI = new static($data, $file->getMimeType(), array(), $strict, $lengthMode);
-
-        return $dataURI;
+        return new static($data, $file->getMimeType(), array(), $strict, $lengthMode);
     }
 
     /**
      * Get a new instance of DataUri\Data from a remote file
      *
      * @param string $url Path to the remote file
-     * @param boolean $strict Use strict mode
+     * @param bool $strict Use strict mode
      * @param int $lengthMode The length mode
-     * @return Data
+     *
      * @throws FileNotFoundException
      */
-    public static function buildFromUrl($url, $strict = false, $lengthMode = Data::TAGLEN)
+    public static function buildFromUrl(string $url, bool $strict = false, int $lengthMode = Data::TAGLEN): static
     {
-        if (! extension_loaded('curl')) {
+        if (!extension_loaded('curl')) {
             throw new \RuntimeException('This method requires the CURL extension.');
         }
 
@@ -258,21 +241,18 @@ class Data
         $mimeType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         curl_close($ch);
 
-        $dataURI = new static($data, $mimeType, array(), $strict, $lengthMode);
-
-        return $dataURI;
+        return new static($data, $mimeType, array(), $strict, $lengthMode);
     }
 
     /**
      * Constructor initialization
-
      *
-     * @param int       $lengthMode     Max allowed data length
-     * @param boolean   $strict         Check data length
+     * @param int $lengthMode Max allowed data length
+     * @param bool $strict Check data length
+     *
      * @throws TooLongDataException
-     * @return void
      */
-    private function init($lengthMode, $strict)
+    private function init(int $lengthMode, bool $strict): void
     {
         if ($strict && $lengthMode === self::LITLEN && strlen($this->data) > self::LIT_LIMIT) {
             throw new TooLongDataException('Too long data', strlen($this->data));
@@ -284,7 +264,5 @@ class Data
             $this->mimeType = 'text/plain';
             $this->addParameters('charset', 'US-ASCII');
         }
-
-        return;
     }
 }

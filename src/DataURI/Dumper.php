@@ -35,11 +35,8 @@ class Dumper
      * the following form :
      *
      * data:[<mediatype>][;base64],<data>
-     *
-     * @param Data $dataURI
-     * @return string
      */
-    public static function dump(Data $dataURI)
+    public static function dump(Data $dataURI): string
     {
         $parameters = '';
 

@@ -35,7 +35,7 @@ use PHPUnit\Framework\TestCase;
 class DumperTest extends TestCase
 {
 
-    public static function dumpDataProvider()
+    public static function dumpDataProvider(): \Generator
     {
         $b64 = self::binaryToBase64(__DIR__ . '/smile.png');
 
@@ -45,19 +45,19 @@ class DumperTest extends TestCase
     }
 
     #[DataProvider('dumpDataProvider')]
-    public function testDump($expectedValue)
+    public function testDump(string $expectedValue): void
     {
         $dataURI = Parser::parse($expectedValue);
         $this->assertEquals($expectedValue, Dumper::dump($dataURI));
     }
 
-    public function testDumpOnRawUrlDecodeString()
+    public function testDumpOnRawUrlDecodeString(): void
     {
         $dataURI = Parser::parse("data:application/vnd-xxx-query,select_vcount,fcol_from_fieldtable/local");
-        $this->assertEquals("data:application/vnd-xxx-query,select_vcount,fcol_from_fieldtable/local", rawurldecode(Dumper::dump($dataURI)));
+        $this->assertSame("data:application/vnd-xxx-query,select_vcount,fcol_from_fieldtable/local", rawurldecode(Dumper::dump($dataURI)));
     }
 
-    private static function binaryToBase64($file)
+    private static function binaryToBase64(string $file): string
     {
         return base64_encode(file_get_contents($file));
     }

@@ -37,7 +37,7 @@ class Parser
      * offset #2 Parameters
      * offset #3 Datas
      */
-    const DATA_URI_REGEXP = '/data:([a-zA-Z-\/+.]*)([a-zA-Z0-9-_;=.+]+)?,(.*)/';
+    public const string DATA_URI_REGEXP = '/data:([a-zA-Z-\/+.]*)([a-zA-Z0-9-_;=.+]+)?,(.*)/';
 
     /**
      * Parse a data URI and return a DataUri\Data
@@ -45,11 +45,10 @@ class Parser
      * @param string $dataUri A data URI
      * @param int $len
      * @param bool $strict
-     * @return Data
      * @throws InvalidDataException
      * @throws InvalidArgumentException
      */
-    public static function parse($dataUri, $len = Data::TAGLEN, $strict = false)
+    public static function parse(string $dataUri, int $len = Data::TAGLEN, bool $strict = false): Data
     {
         $dataParams = $matches = array();
 
@@ -59,7 +58,7 @@ class Parser
 
         $base64 = false;
 
-        $mimeType = $matches[1] ? $matches[1] : null;
+        $mimeType = $matches[1] !== '' && $matches[1] !== '0' ? $matches[1] : null;
         $params = $matches[2];
         $rawData = $matches[3];
 
