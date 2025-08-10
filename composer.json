@@ -3,16 +3,23 @@
   "version": "0.2.5",
   "type": "library",
   "description": "PHP DataURI component",
-  "keywords": ["data-uri", "data", "URI"],
+  "keywords": [
+    "data-uri",
+    "data",
+    "URI"
+  ],
   "license": "MIT",
-  "authors": [{
-    "name": "Alchemy",
-    "email": "info@alchemy.fr",
-    "homepage": "http://www.alchemy.fr"
-  }, {
-    "name": "nlegoff",
-    "email": "legoff.n@gmail.com"
-  }],
+  "authors": [
+    {
+      "name": "Alchemy",
+      "email": "info@alchemy.fr",
+      "homepage": "http://www.alchemy.fr"
+    },
+    {
+      "name": "nlegoff",
+      "email": "legoff.n@gmail.com"
+    }
+  ],
   "require": {
     "php": ">=8.3",
     "symfony/http-foundation": "^7.3"
