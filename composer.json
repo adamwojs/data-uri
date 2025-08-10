@@ -27,7 +27,8 @@
   "require-dev": {
     "ext-curl": "*",
     "phpunit/phpunit": "^12.3",
-    "symfony/mime": "^7.3"
+    "symfony/mime": "^7.3",
+    "rector/rector": "^2.1"
   },
   "replace": {
     "alchemy/data-uri": "*"
