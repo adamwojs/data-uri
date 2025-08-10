@@ -1,6 +1,6 @@
 {
   "name": "adamwojs/data-uri",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "type": "library",
   "description": "PHP DataURI component",
   "keywords": [
