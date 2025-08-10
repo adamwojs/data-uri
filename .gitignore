@@ -3,3 +3,4 @@ docs/build
 composer.phar
 composer.lock
 .phpunit.result.cache
+.php-cs-fixer.cache

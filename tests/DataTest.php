@@ -34,14 +34,13 @@ use PHPUnit\Framework\TestCase;
  */
 class DataTest extends TestCase
 {
-
     public function testTooLongException(): void
     {
         $i = 0;
         $string = '';
         while ($i < Data::ATTS_TAG_LIMIT + 1) {
             $string .= 'x';
-            $i ++;
+            $i++;
         }
 
         try {

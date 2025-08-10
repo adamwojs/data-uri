@@ -33,7 +33,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ParserTest extends TestCase
 {
-
     public function testParse(): void
     {
         $b64 = $this->binaryToBase64(__DIR__ . '/smile.png');

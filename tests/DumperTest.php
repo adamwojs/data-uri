@@ -34,7 +34,6 @@ use PHPUnit\Framework\TestCase;
  */
 class DumperTest extends TestCase
 {
-
     public static function dumpDataProvider(): \Generator
     {
         $b64 = self::binaryToBase64(__DIR__ . '/smile.png');

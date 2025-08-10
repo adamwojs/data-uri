@@ -18,6 +18,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+declare(strict_types=1);
 
 namespace DataURI;
 
@@ -29,7 +30,6 @@ namespace DataURI;
  */
 class Dumper
 {
-
     /**
      * Transform a DataURI\Data object to its URI representation and take
      * the following form :
@@ -48,18 +48,19 @@ class Dumper
 
         $base64 = '';
 
-        if($dataURI->isBinaryData()){
+        if ($dataURI->isBinaryData()) {
             $base64 = sprintf(';%s', Data::BASE_64);
             $data = base64_encode($dataURI->getData());
-        }else{
+        } else {
             $data = rawurlencode($dataURI->getData());
         }
 
-        return sprintf('data:%s%s%s,%s'
-                , $dataURI->getMimeType()
-                , $parameters
-                , $base64
-                , $data
+        return sprintf(
+            'data:%s%s%s,%s',
+            $dataURI->getMimeType(),
+            $parameters,
+            $base64,
+            $data
         );
     }
 }

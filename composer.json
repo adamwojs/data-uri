@@ -28,7 +28,8 @@
     "ext-curl": "*",
     "phpunit/phpunit": "^12.3",
     "symfony/mime": "^7.3",
-    "rector/rector": "^2.1"
+    "rector/rector": "^2.1",
+    "friendsofphp/php-cs-fixer": "^3.85"
   },
   "replace": {
     "alchemy/data-uri": "*"

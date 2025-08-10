@@ -18,6 +18,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+declare(strict_types=1);
 
 namespace DataURI;
 
@@ -52,7 +53,7 @@ class Parser
     {
         $dataParams = $matches = array();
 
-        if ( ! preg_match(self::DATA_URI_REGEXP, $dataUri, $matches)) {
+        if (! preg_match(self::DATA_URI_REGEXP, $dataUri, $matches)) {
             throw new InvalidArgumentException('Could not parse the URL scheme');
         }
 
@@ -77,7 +78,7 @@ class Parser
             throw new InvalidDataException('base64 decoding failed');
         }
 
-        if ( ! $base64) {
+        if (! $base64) {
             $rawData = rawurldecode($rawData);
         }
 
