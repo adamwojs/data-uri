@@ -1,5 +1,5 @@
 {
-  "name": "data-uri/data-uri",
+  "name": "adamwojs/data-uri",
   "version": "0.2.5",
   "type": "library",
   "description": "PHP DataURI component",
@@ -28,6 +28,9 @@
     "sami/sami": "^3.3",
     "ext-curl": "*",
     "phpunit/phpunit": "^4.8|^5.5|^6.5|^7.0"
+  },
+  "replace": {
+    "alchemy/data-uri": "*"
   },
   "autoload": {
     "psr-4": {
