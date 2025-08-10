@@ -22,6 +22,7 @@
 namespace DataURI\Tests;
 
 use DataURI\Data;
+use DataURI\Exception\FileNotFoundException;
 use DataURI\Exception\TooLongDataException;
 use PHPUnit\Framework\TestCase;
 
@@ -82,7 +83,7 @@ class DataTest extends TestCase
         $parameters = array('charset', 'utf-8');
         $dataURI = new Data($dataString, $mimeType, $parameters);
         $this->assertEquals($parameters, $dataURI->getParameters());
-        $this->assertInternalType('array', $dataURI->getParameters());
+        $this->assertIsArray($dataURI->getParameters());
     }
 
     public function testIsBinaryData()
@@ -124,29 +125,25 @@ class DataTest extends TestCase
         $this->assertEquals(file_get_contents($file), $dataURI->getData());
     }
 
-    /**
-     * @expectedException DataURI\Exception\FileNotFoundException
-     */
     public function testBuildFromUrlShouldThrowFileNotFoundException()
     {
-        $url = 'http://via.placeholder.com/x150.png';
+        $this->expectException(FileNotFoundException::class);
+        $url = 'https://placehold.co/x150.png';
         Data::buildFromUrl($url);
     }
 
     public function testBuildFromUrl()
     {
-        $url = 'http://via.placeholder.com/350x150.png';
+        $url = 'https://placehold.co/350x150.png';
         $dataURI = Data::buildFromUrl($url);
         $this->assertInstanceOf('DataURI\Data', $dataURI);
         $this->assertEquals('image/png', $dataURI->getMimeType());
         $this->assertEquals(file_get_contents($url), $dataURI->getData());
     }
 
-    /**
-     * @expectedException \DataURI\Exception\FileNotFoundException
-     */
     public function testFileNotFound()
     {
+        $this->expectException(FileNotFoundException::class);
         $filename = __DIR__ . '/unknown-file';
 
         $dataString = 'Lorem ipsum dolor sit amet';
@@ -154,11 +151,10 @@ class DataTest extends TestCase
         $dataURI->write($filename);
     }
 
-    /**
-     * @expectedException \DataURI\Exception\FileNotFoundException
-     */
     public function testFileNotFoundFromFile()
     {
+        $this->expectException(FileNotFoundException::class);
+
         $filename = __DIR__ . '/unknown-file';
 
         Data::buildFromFile($filename);

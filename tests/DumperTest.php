@@ -23,6 +23,7 @@ namespace DataURI\Tests;
 
 use DataURI\Parser;
 use DataURI\Dumper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -34,20 +35,16 @@ use PHPUnit\Framework\TestCase;
 class DumperTest extends TestCase
 {
 
-    public function dumpDataProvider()
+    public static function dumpDataProvider()
     {
-        $b64 = $this->binaryToBase64(__DIR__ . '/smile.png');
+        $b64 = self::binaryToBase64(__DIR__ . '/smile.png');
 
-        return array(
-            array("data:image/png;base64," . $b64),
-            array("data:image/png;paramName=paramValue;base64," . $b64),
-            array("data:text/plain;charset=utf-8,%23%24%25")
-        );
+        yield ["data:image/png;base64," . $b64];
+        yield ["data:image/png;paramName=paramValue;base64," . $b64];
+        yield ["data:text/plain;charset=utf-8,%23%24%25"];
     }
 
-    /**
-     * @dataProvider dumpDataProvider
-     */
+    #[DataProvider('dumpDataProvider')]
     public function testDump($expectedValue)
     {
         $dataURI = Parser::parse($expectedValue);
@@ -60,7 +57,7 @@ class DumperTest extends TestCase
         $this->assertEquals("data:application/vnd-xxx-query,select_vcount,fcol_from_fieldtable/local", rawurldecode(Dumper::dump($dataURI)));
     }
 
-    private function binaryToBase64($file)
+    private static function binaryToBase64($file)
     {
         return base64_encode(file_get_contents($file));
     }

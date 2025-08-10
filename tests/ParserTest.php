@@ -21,6 +21,7 @@
 
 namespace DataURI\Tests;
 
+use DataURI\Exception\InvalidDataException;
 use DataURI\Parser;
 use PHPUnit\Framework\TestCase;
 
@@ -42,21 +43,21 @@ class ParserTest extends TestCase
             "data:image/png;paramName=paramValue;base64," . $b64,
             "data:text/plain;charset=utf-8,%23%24%25",
             "data:application/vnd-xxx-query,select_vcount,fcol_from_fieldtable/local",
-			"data:image/svg+xml;base64," . $b64,
-			"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . $b64,
+            "data:image/svg+xml;base64," . $b64,
+            "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . $b64,
             "data:;base64," . $b64,
         );
 
         $dataURI = Parser::parse($tests[0]);
         $this->assertEquals('image/png', $dataURI->getMimeType());
         $this->assertTrue($dataURI->isBinaryData());
-        $this->assertInternalType('string', $dataURI->getData());
+        $this->assertIsString($dataURI->getData());
         $this->assertEquals(0, count($dataURI->getParameters()));
 
         $dataURI = Parser::parse($tests[1]);
         $this->assertEquals('image/png', $dataURI->getMimeType());
         $this->assertTrue($dataURI->isBinaryData());
-        $this->assertInternalType('string', $dataURI->getData());
+        $this->assertIsString($dataURI->getData());
         $this->assertEquals(1, count($dataURI->getParameters()));
 
         $dataURI = Parser::parse($tests[2]);
@@ -74,22 +75,18 @@ class ParserTest extends TestCase
         $dataURI = Parser::parse($tests[6]);
 
         $this->assertEquals('text/plain', $dataURI->getMimeType());
-}
+    }
 
-    /**
-     * @expectedException \DataURI\Exception\InvalidDataException
-     */
     public function testInvalidDataException()
     {
+        $this->expectException(InvalidDataException::class);
         $invalidData = 'data:image/gif;base64,';
         Parser::parse($invalidData);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testInvalidArgumentException()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $invalidData = 'lorem:image:test,datas';
         Parser::parse($invalidData);
     }
